@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Stopwatch</title>
+    <style>
+        #timer {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Stopwatch</h1>
+
+    <div id="timer">00 : 00 : 000</div>
+
+    <button id="startButton">Start</button>
+    <button id="stopButton">Stop</button>
+    <button id="resetButton">Reset</button>
+
+    <script>
+        var timerElement = document.getElementById('timer');
+        var startButton = document.getElementById('startButton');
+        var stopButton = document.getElementById('stopButton');
+        var resetButton = document.getElementById('resetButton');
+
+        var startTime;
+        var elapsedTime = 0;
+        var timerInterval;
+
+        function startTimer() {
+            startTime = Date.now() - elapsedTime;
+            timerInterval = setInterval(updateTimer, 10);
+            startButton.disabled = true;
+            stopButton.disabled = false;
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            startButton.disabled = false;
+            stopButton.disabled = true;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            elapsedTime = 0;
+            timerElement.textContent = formatTime(elapsedTime);
+            startButton.disabled = false;
+            stopButton.disabled = true;
+        }
+
+        function updateTimer() {
+            var currentTime = Date.now();
+            elapsedTime = currentTime - startTime;
+            timerElement.textContent = formatTime(elapsedTime);
+        }
+
+        function formatTime(time) {
+            var minutes = Math.floor(time / 60000);
+            var seconds = Math.floor((time % 60000) / 1000);
+            var milliseconds = Math.floor((time % 1000) / 10);
+
+            return (
+                padDigits(minutes, 2) +
+                " : " +
+                padDigits(seconds, 2) +
+                " : " +
+                padDigits(milliseconds, 3)
+            );
+        }
+
+        function padDigits(number, digits) {
+            return number.toString().padStart(digits, '0');
+        }
+
+        startButton.addEventListener('click', startTimer);
+        stopButton.addEventListener('click', stopTimer);
+        resetButton.addEventListener('click', resetTimer);
+    </script>
+</body>
+
+</html>
